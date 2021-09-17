@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<div>
+    {% for vid in videos %}
+        <video width="500" height="500" controls >
+        <source src="{{vid.file.url}}" type="video/mp4">
+
+        </video>
+            {{vid.title}}
+        {{vid.description}}
+    {% endfor %}
+</div>
+<br>
+{% for proj in images %}
+    <h3>{{proj.name}}</h3>
+    <img src="{{proj.image.url}}" alt="">
+{% endfor %}
+<br>
+{% for pro in category_image %}
+    <h3>{{pro.name}}</h3>
+        {{pro.description}}
+    <img src="{{pro.image.url}}" alt="">
+{% endfor %}
+</body>
+</html>

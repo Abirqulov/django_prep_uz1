@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+{% for comment in comments %}
+    {{comment.author}}
+    {{comment.date_created.date}}
+    {{comment.comment_field}}
+
+        {% for reply in comment.replies.all %}
+            {{reply.author}}
+            {{reply.date_created.date}}
+            {{reply.comment_field}}
+        {% endfor %}
+        <a class="text-decoration-none" data-bs-toggle="collapse" href="#collapseExample{{comment.id}}" role="button" aria-expanded="false" aria-controls="collapseExample">
+            Reply </a>
+        <div class="collapse" id="collapseExample{{comment.id}}">
+            <div>
+                <form action="" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                            <div class="form-group">
+                                {{ form.author }}
+                            </div>
+                            <div class="form-group mt-md-2">
+                                {{form.comment}}
+                            </div>
+                            <input type="hidden" name="reply_id" value="{{ comment.id }}">
+                            <button class="btn btn-primary mt-md-1" type="submit" value="Reply">Reply</button>              </form>
+            </div>
+        </div>
+    <hr>
+{% endfor %}
+</body>
+</html>
