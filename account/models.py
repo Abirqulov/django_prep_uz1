@@ -11,7 +11,6 @@ class User(AbstractUser):
     password = models.CharField(max_length=150)
     email = models.CharField(max_length=120)
     birth_date = models.DateField(default=None, null=True, blank=True)
-    # gender = models.CharField(choices=GENDER_CHOICES, max_length=120, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

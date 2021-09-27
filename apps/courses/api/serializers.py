@@ -2,28 +2,114 @@ from ..models import *
 from rest_framework import serializers
 
 
-class Lesson_StructureSerializers(serializers.ModelSerializer):
+class LessonSerializers(serializers.ModelSerializer):
+    childs = serializers.SerializerMethodField(read_only=True)
+    name = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Lessons
+        fields = ['id', 'course', 'name', 'video', 'childs', 'slug']
+
+    def get_childs(self, instance):
+        childs = instance.childs.all().order_by('id')
+        request = self.context.get('request')
+        return LessonSerializers(childs, many=True, context={'request': request}).data
+
+    def get_name(self, lesson1):
+       try:
+           request = self.context.get('request')
+           lan = request.GET.get('lan')
+           name = lesson1.name
+           if lan == 'ru':
+               name = lesson1.name_ru
+           elif lan == 'uz':
+               name = lesson1.name
+           return name
+       except:
+           return lesson1.name
+
+
+class CourseSerializers(serializers.ModelSerializer):
+    name = serializers.SerializerMethodField()
+    lessons = LessonSerializers(many=True, read_only=True)
+
+    class Meta:
+        model = Course
+        fields = ['id', 'name', 'teachers', 'category', 'price', 'description', 'slug', 'lessons']
+
+    def get_name(self, course):
+        request = self.context.get('request')
+        lan = request.GET.get('lan', 'uz')
+        if lan == 'uz':
+            if course.name:
+                return course.name
+        elif lan == 'ru':
+            if course.name_ru:
+                return course.name_ru
+        return course.name
+
+
+class CategoryListSerializers(serializers.ModelSerializer):
+    name = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Category
+        fields = ['id', 'name', 'image', 'slug']
+
+    def get_name(self, category):
+        try:
+            request = self.context.get('request')
+            lan = request.GET.get('lan')
+            name = category.name
+            if lan == "ru":
+                name = category.name_ru
+            elif lan == "uz":
+                name = category.name
+            return name
+        except:
+            return category.name
+
+
+class CategorySerializers(serializers.ModelSerializer):
+    name = serializers.SerializerMethodField()
+    courses = CourseSerializers(many=True, read_only=True)
+
+    class Meta:
+        model = Category
+        fields = ['id', 'name', 'image', 'slug', 'courses']
+
+    def get_name(self, category):
+        try:
+            request = self.context.get('request')
+            lan = request.GET.get('lan')
+            name = category.name
+            if lan == "ru":
+                name = category.name_ru
+            elif lan == "uz":
+                name = category.name
+            return name
+        except:
+            return category.name
+
+
+class TeachersSerializers(serializers.ModelSerializer):
     description = serializers.SerializerMethodField()
 
     class Meta:
-        model = Lesson_Structure
-        fields = ['id', 'title', 'description', 'video']
+        model = Teachers
+        fields = ['id', 'name', 'description', 'images', 'slug']
 
-    def get_description(self, lesson_structure):
-        try:
-            request = self.context.get('request')
-            lan =request.GET.get('lan')
-            description = lesson_structure.description
-            if lan == "ru":
-                description = lesson_structure.description_ru
-                return description
-            elif lan == "uz":
-                description = lesson_structure.description
-                return description
-            else:
-                return description
-        except:
-            return lesson_structure.description
+    def get_description(self, teacher):
+        request = self.context.get('request')
+        lan = request.GET.get('lan', 'uz')
+        if lan == "uz":
+            if teacher.description:
+                return teacher.description
+        elif lan == "ru":
+            if teacher.description_ru:
+                return teacher.description_ru
+
+        return teacher.description
 
 
 class CommentSerializers(serializers.ModelSerializer):
@@ -32,19 +118,18 @@ class CommentSerializers(serializers.ModelSerializer):
         fields = ['id', 'author', 'post', 'text', 'reply']
 
 
-class QuestionSerializers(serializers.ModelSerializer):
-    class Meta:
-        model = Question
-        fields = ['id', 'question', 'lesson']
-
-
-class AnswerSerializers(serializers.ModelSerializer):
+class AnswerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Answer
-        fields = ['id', 'questions', 'answer', 'status']
+        fields = ['id', 'answer']
 
 
-class ResultsSerializers(serializers.ModelSerializer):
+class QuestionSerializer(serializers.ModelSerializer):
+    answers = AnswerSerializer(many=True, read_only=True)
+
     class Meta:
-        model = Results
-        fields = ['id', 'ques', 'ans']
+        model = Question
+        fields = ['id', 'text', 'answers']
+
+
+
