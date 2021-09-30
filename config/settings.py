@@ -94,7 +94,7 @@ if os.name == 'nt':
     os.environ['PROJ_LIB'] = OSGEO4W + r"\share\proj"
     os.environ['PATH'] = OSGEO4W + r"\bin;" + os.environ['PATH']
 
-GDAL_LIBRARY_PATH = r'C:\OSGeo4W64\bin\gdal301.dll'
+GDAL_LIBRARY_PATH = r'C:\OSGeo4W64\bin\gdal301'
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
