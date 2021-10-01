@@ -27,7 +27,7 @@ SECRET_KEY = 'yhghtq-tsbp57cld(1&ck3&7nzt0vwzx64-n8=&!n#jib-t58a'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['hidden-plains-80217.herokuapp.com', '127.0.0.1']
+ALLOWED_HOSTS = ['*']
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
