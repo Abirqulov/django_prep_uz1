@@ -88,10 +88,10 @@ WSGI_APPLICATION = 'config.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'NAME': 'prep_uz1',
-        'USER': 'postgres',
-        'PASSWORD': 'Sulton2022',
-        'HOST': 'localhost',
+        'NAME': 'd3fbmns24v72vo',
+        'USER': 'pwznijqylnkwca',
+        'PASSWORD': '80ec3ae9bb401a181c88e0999064350266019a333f834900600229e311d552f7',
+        'HOST': 'ec2-52-45-238-24.compute-1.amazonaws.com',
         'PORT': '5432',
     }
 }
