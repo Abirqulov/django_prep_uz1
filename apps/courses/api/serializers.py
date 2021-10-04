@@ -6,7 +6,7 @@ class LessonSerializers(serializers.ModelSerializer):
     childs = serializers.SerializerMethodField(read_only=True)
     name = serializers.SerializerMethodField()
 
-    class Meta:
+    class Meta: 
         model = Lessons
         fields = ['id', 'course', 'name', 'video', 'childs', 'slug']
 
@@ -49,6 +49,25 @@ class CourseSerializers(serializers.ModelSerializer):
         return course.name
 
 
+class CourseCategorySerializers(serializers.ModelSerializer):
+    name = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Course
+        fields = ['id', 'name', 'teachers', 'category', 'price', 'description', 'slug']
+
+    def get_name(self, course):
+        request = self.context.get('request')
+        lan = request.GET.get('lan', 'uz')
+        if lan == 'uz':
+            if course.name:
+                return course.name
+        elif lan == 'ru':
+            if course.name_ru:
+                return course.name_ru
+        return course.name
+
+
 class CategoryListSerializers(serializers.ModelSerializer):
     name = serializers.SerializerMethodField()
 
@@ -72,7 +91,7 @@ class CategoryListSerializers(serializers.ModelSerializer):
 
 class CategorySerializers(serializers.ModelSerializer):
     name = serializers.SerializerMethodField()
-    courses = CourseSerializers(many=True, read_only=True)
+    courses = CourseCategorySerializers(many=True, read_only=True)
 
     class Meta:
         model = Category
