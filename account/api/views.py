@@ -6,31 +6,32 @@ from django.contrib.auth import authenticate
 
 
 class UsersView(GenericAPIView):
-    serializer_class = UserRegisterSerializers
+    serializer_class = RegisterSerializers
     queryset = User.objects.all()
 
 
-class RegisterAPIView(GenericAPIView):
-    serializer_class = UserRegisterSerializers
-
-    def post(self, request, *args, **kwargs):
-        serializers = self.serializer_class(data=request.data)
-
-        if serializers.is_valid():
-            serializers.save()
-            return response.Response(serializers.data, status=status.HTTP_201_CREATED)
-        return response.Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-class LoginAPIView(GenericAPIView):
-    serializer_class = UserLoginSerializers
+class RegisterApiView(GenericAPIView):
+    serializer_class = RegisterSerializers
 
     def post(self, request):
+        serializer = self.serializer_class(data=request.data)
+
+        if serializer.is_valid():
+            serializer.save()
+            return response.Response(serializer.data, status=status.HTTP_201_CREATED)
+        return response.Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class LoginApiView(GenericAPIView):
+    serializer_class = LoginSerializers
+
+    def post(self, request):
+        print(('request.data', request.data))
         username = request.data.get('username')
         password = request.data.get('password')
         user = authenticate(username=username, password=password)
         if user:
-            serializers = self.serializer_class(user)
-            return response.Response(serializers.data, status=status.HTTP_200_OK)
-        return response.Response({'messages': 'Username yoki parol hato!'}, status=status.HTTP_401_UNAUTHORIZED)
+            serializer = self.serializer_class(user)
+            return response.Response(serializer.data, status=status.HTTP_200_OK)
+        return response.Response({'messeges': 'Login yoki parol mos kelmadi!'}, status=status.HTTP_401_UNAUTHORIZED)
 
