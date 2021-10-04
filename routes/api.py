@@ -16,16 +16,15 @@ urlpatterns = [
     path('teachers/<str:slug>', TeachersSlugView.as_view()),
     path('course/<int:pk>', CourseAPIView.as_view()),
     path('course/<str:slug>', CourseSlugView.as_view()),
-    path('lessons', LessonsAPIView.as_view()),
-    path('lessons/<str:slug>', LessonsSlugView.as_view()),
+    path('lesson/<str:slug>', LessonsSlugView.as_view()),
 
     path('lesson_video/', videos_file, name='videos'),
     path('images/', image_file),
 
     path('comment/', comment),
 
-    path('question/<int:lesson_id>/', QuestionList.as_view()),
-    path('question-check/<int:lesson_id>/', QuestionCheck.as_view()),
+    path('question/<int:lesson_id>', QuestionList.as_view()),
+    path('question-check/<int:lesson_id>', QuestionCheck.as_view()),
     path('answer/', AnswerList.as_view()),
 
 

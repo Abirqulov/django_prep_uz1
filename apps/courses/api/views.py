@@ -89,13 +89,6 @@ class CourseSlugView(generics.RetrieveAPIView):
         return staff
 
 
-class LessonsAPIView(generics.ListAPIView):
-    serializer_class = LessonSerializers
-    queryset = Lessons.objects.filter(parent__isnull=True)
-    filter_backends = (FullTextSearchFilterBackend, DjangoFilterBackend)
-    search_fields = ['name', '@full_name', 'teachers']
-
-
 class LessonsSlugView(generics.RetrieveAPIView):
     serializer_class = LessonSerializers
     queryset = Lessons.objects.filter(slug__isnull=True)
