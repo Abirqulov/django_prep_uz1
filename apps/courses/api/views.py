@@ -45,7 +45,7 @@ class TeachersListView(generics.ListAPIView):
     serializer_class = TeachersSerializers
     queryset = Teachers.objects.all()
     filter_backends = [FullTextSearchFilterBackend, DjangoFilterBackend]
-    search_fields = ['name', 'description', 'teachers']
+    search_fields = ['name', 'description']
     PageNumberPagination.page_size = 200
 
 
