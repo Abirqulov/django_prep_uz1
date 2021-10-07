@@ -26,7 +26,8 @@ class FullTextSearchFilterBackend(r_filters.SearchFilter):
 
             else:
                 queryset = queryset.annotate(similarity=TrigramSimilarity('name', search_terms), ).filter(
-                    Q(name__icontains=search_term) | Q(similarity__gt=0.16)
+                    Q(name__icontains=search_term) | Q(teachers__name__icontains=search_term) |
+                    Q(description__icontains=search_term) | Q(similarity__gt=0.16)
                 ).order_by('-similarity')
 
             return queryset

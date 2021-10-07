@@ -2,12 +2,12 @@ from ..models import *
 from .serializers import *
 from .filters import *
 from rest_framework.generics import GenericAPIView, ListAPIView, ListCreateAPIView, CreateAPIView, RetrieveAPIView
-from django.shortcuts import render, redirect, reverse
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-from rest_framework import generics, views, response
+from rest_framework import generics, views, response, filters
 from django.shortcuts import render, get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.pagination import PageNumberPagination
 
 
 class CategoryListAPIView(generics.ListAPIView):
@@ -15,6 +15,7 @@ class CategoryListAPIView(generics.ListAPIView):
     queryset = Category.objects.all()
     filter_backends = [FullTextSearchFilterBackend, DjangoFilterBackend]
     search_fields = ['name', '@full_name']
+    PageNumberPagination.page_size = 200
 
 
 class CategoryDetailAPIView(generics.RetrieveAPIView):
@@ -44,7 +45,8 @@ class TeachersListView(generics.ListAPIView):
     serializer_class = TeachersSerializers
     queryset = Teachers.objects.all()
     filter_backends = [FullTextSearchFilterBackend, DjangoFilterBackend]
-    search_fields = ['name', '@full_name']
+    search_fields = ['name', 'description', 'teachers']
+    PageNumberPagination.page_size = 200
 
 
 class TeachersAPIView(generics.RetrieveAPIView):
@@ -59,8 +61,6 @@ class TeachersAPIView(generics.RetrieveAPIView):
 class TeachersSlugView(generics.RetrieveAPIView):
     serializer_class = TeachersSerializers
     queryset = Teachers.objects.all()
-    filter_backends = [FullTextSearchFilterBackend, DjangoFilterBackend]
-    search_fields = ['name', '@full_name']
 
     def get_object(self):
         slug = self.kwargs.get('slug')
@@ -68,20 +68,25 @@ class TeachersSlugView(generics.RetrieveAPIView):
         return staff
 
 
+class CourseListView(generics.ListAPIView):
+    serializer_class = CourseCategorySerializers
+    queryset = Course.objects.all()
+    filter_backends = (filters.SearchFilter, FullTextSearchFilterBackend)
+    search_fields = ['name', 'description', 'teachers__name']
+    PageNumberPagination.page_size = 200
+
+
 class CourseAPIView(generics.RetrieveAPIView):
     serializer_class = CourseSerializers
     queryset = Course.objects.all()
-    filter_backends = [FullTextSearchFilterBackend, DjangoFilterBackend]
-    search_fields = ['name', '@full_name']
-    #
-    # def get_queryset(self, *args, **kwargs):
-    #     qs = super().get_queryset()
-    #     return qs.filter(category=self.kwargs['category_id'])
+    filter_backends = (DjangoFilterBackend, filters.OrderingFilter)
 
 
 class CourseSlugView(generics.RetrieveAPIView):
+    lookup_field = 'slug'
     serializer_class = CourseSerializers
     queryset = Course.objects.all()
+    filter_backends = (DjangoFilterBackend, filters.OrderingFilter)
 
     def get_object(self):
         slug = self.kwargs.get('slug')
@@ -102,6 +107,7 @@ class LessonsSlugView(generics.RetrieveAPIView):
 class QuestionList(generics.ListCreateAPIView):
     serializer_class = QuestionSerializer
     queryset = Question.objects.all()
+    PageNumberPagination.page_size = 200
 
     def get_queryset(self, *args, **kwargs):
         qs = super().get_queryset()
@@ -111,6 +117,7 @@ class QuestionList(generics.ListCreateAPIView):
 class AnswerList(generics.ListCreateAPIView):
     serializer_class = AnswerSerializer
     queryset = Answer.objects.all()
+    PageNumberPagination.page_size = 200
 
 
 class QuestionCheck(views.APIView):
@@ -165,7 +172,6 @@ def comment(request):
         'status': 1,
     }
     return Response(res)
-
 
 
 def videos_file(request):

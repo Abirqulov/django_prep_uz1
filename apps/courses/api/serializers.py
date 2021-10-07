@@ -32,10 +32,14 @@ class LessonSerializers(serializers.ModelSerializer):
 class CourseSerializers(serializers.ModelSerializer):
     name = serializers.SerializerMethodField()
     lessons = LessonSerializers(many=True, read_only=True)
+    teacher_name = serializers.SerializerMethodField()
 
     class Meta:
         model = Course
-        fields = ['id', 'name', 'teachers', 'category', 'price', 'description', 'slug', 'lessons']
+        fields = ['id', 'name', 'teachers', 'teacher_name', 'category', 'price', 'description', 'slug', 'lessons']
+
+    def get_teacher_name(self, course):
+        return course.teachers.name
 
     def get_name(self, course):
         request = self.context.get('request')
@@ -51,10 +55,15 @@ class CourseSerializers(serializers.ModelSerializer):
 
 class CourseCategorySerializers(serializers.ModelSerializer):
     name = serializers.SerializerMethodField()
+    teacher_name = serializers.SerializerMethodField()
 
     class Meta:
         model = Course
-        fields = ['id', 'name', 'teachers', 'category', 'price', 'description', 'slug']
+        fields = ['id', 'name', 'teacher_name', 'category', 'price', 'description', 'slug']
+
+
+    def get_teacher_name(self, course):
+        return course.teachers.name
 
     def get_name(self, course):
         request = self.context.get('request')
