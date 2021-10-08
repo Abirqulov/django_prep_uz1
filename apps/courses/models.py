@@ -21,6 +21,9 @@ class Teachers(models.Model):
     images = models.ImageField(upload_to='static/teachers_images')
     slug = models.SlugField(max_length=120, unique=True)
 
+    class Meta:
+        ordering = ['id']
+
     def __str__(self):
         return self.name
 
@@ -33,6 +36,9 @@ class Course(models.Model):
     price = models.CharField(max_length=120)
     description = models.TextField()
     slug = models.SlugField(max_length=120, unique=True, blank=True)
+
+    class Meta:
+        ordering = ['id']
 
     def __str__(self):
         return self.name
