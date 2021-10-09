@@ -30,8 +30,9 @@ class Teachers(models.Model):
 
 class Course(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='courses')
-    teachers = models.ForeignKey(Teachers, on_delete=models.DO_NOTHING, blank=True)
+    teachers = models.ForeignKey(Teachers, on_delete=models.DO_NOTHING, blank=True, related_name='course')
     name = models.CharField(max_length=120)
+    image = models.ImageField(upload_to='static/course_images')
     name_ru = models.CharField(max_length=120, null=True)
     price = models.CharField(max_length=120)
     description = models.TextField()

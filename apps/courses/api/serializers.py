@@ -59,8 +59,7 @@ class CourseCategorySerializers(serializers.ModelSerializer):
 
     class Meta:
         model = Course
-        fields = ['id', 'name', 'teacher_name', 'category', 'price', 'description', 'slug']
-
+        fields = ['id', 'name', 'teacher_name', 'category', 'price', 'slug']
 
     def get_teacher_name(self, course):
         return course.teachers.name
@@ -122,10 +121,11 @@ class CategorySerializers(serializers.ModelSerializer):
 
 class TeachersSerializers(serializers.ModelSerializer):
     description = serializers.SerializerMethodField()
+    course = CourseCategorySerializers(many=True, read_only=True)
 
     class Meta:
         model = Teachers
-        fields = ['id', 'name', 'description', 'images', 'slug']
+        fields = ['id', 'name', 'description', 'images', 'slug', 'course']
 
     def get_description(self, teacher):
         request = self.context.get('request')
