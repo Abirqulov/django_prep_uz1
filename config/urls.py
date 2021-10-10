@@ -27,7 +27,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('routes.api')),
 
-    re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
+    # (r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
+    # (r'^static/(?P<path>.*)$', serve, {'document_root': settings.STATIC_ROOT}),
 
     path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
