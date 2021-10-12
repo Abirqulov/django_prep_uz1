@@ -29,17 +29,20 @@ class LessonSerializers(serializers.ModelSerializer):
            return lesson1.name
 
 
+class CourseTeacher(serializers.ModelSerializer):
+    class Meta:
+        model = Teachers
+        fields = ['id', 'name']
+
+
 class CourseSerializers(serializers.ModelSerializer):
     name = serializers.SerializerMethodField()
     lessons = LessonSerializers(many=True, read_only=True)
-    teacher_name = serializers.SerializerMethodField()
+    teachers = CourseTeacher(many=False, read_only=True)
 
     class Meta:
         model = Course
-        fields = ['id', 'name', 'image', 'teachers', 'teacher_name', 'category', 'price', 'description', 'slug', 'lessons']
-
-    def get_teacher_name(self, course):
-        return course.teachers.name
+        fields = ['id', 'name', 'image', 'teachers', 'category', 'price', 'description', 'slug', 'lessons']
 
     def get_name(self, course):
         request = self.context.get('request')
@@ -55,14 +58,15 @@ class CourseSerializers(serializers.ModelSerializer):
 
 class CourseCategorySerializers(serializers.ModelSerializer):
     name = serializers.SerializerMethodField()
-    teacher_name = serializers.SerializerMethodField()
+    # teacher_name = serializers.SerializerMethodField()
+    teachers = CourseTeacher(many=False, read_only=True)
 
     class Meta:
         model = Course
-        fields = ['id', 'name', 'image', 'teachers', 'teacher_name', 'category', 'price', 'slug']
+        fields = ['id', 'name', 'image', 'teachers', 'category', 'price', 'slug']
 
-    def get_teacher_name(self, course):
-        return course.teachers.name
+    # def get_teacher_name(self, course):
+    #     return course.teachers.name
 
     def get_name(self, course):
         request = self.context.get('request')
