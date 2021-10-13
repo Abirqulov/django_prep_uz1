@@ -60,10 +60,11 @@ class CourseCategorySerializers(serializers.ModelSerializer):
     name = serializers.SerializerMethodField()
     # teacher_name = serializers.SerializerMethodField()
     teachers = CourseTeacher(many=False, read_only=True)
+    lessons = LessonSerializers(many=True, read_only=True)
 
     class Meta:
         model = Course
-        fields = ['id', 'name', 'image', 'teachers', 'category', 'price', 'slug']
+        fields = ['id', 'name', 'image', 'teachers', 'category', 'price', 'slug', 'lessons']
 
     # def get_teacher_name(self, course):
     #     return course.teachers.name

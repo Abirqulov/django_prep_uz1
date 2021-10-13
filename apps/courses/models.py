@@ -35,6 +35,9 @@ class Course(models.Model):
     image = models.ImageField(upload_to='static/course_images')
     name_ru = models.CharField(max_length=120, null=True)
     price = models.CharField(max_length=120)
+    about = models.TextField()
+    you_learn = models.CharField(max_length=255, null=True)
+    reader_obligation = models.CharField(max_length=255, null=True)
     description = models.TextField()
     slug = models.SlugField(max_length=120, unique=True, blank=True)
 

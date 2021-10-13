@@ -77,6 +77,15 @@ class CourseAPIView(generics.RetrieveAPIView):
     queryset = Course.objects.all()
     filter_backends = (DjangoFilterBackend, filters.OrderingFilter)
 
+    def get_about_course(self, request):
+        videos = []
+        for i in Lessons.objects.filter(parent__isnull=True):
+            videos.append(i)
+        k = len(videos)
+        return response.Response({
+            'Darslar': k,
+        })
+
 
 class CourseSlugView(generics.RetrieveAPIView):
     lookup_field = 'slug'
@@ -98,6 +107,7 @@ class LessonsSlugView(generics.RetrieveAPIView):
         slug = self.kwargs.get('slug')
         staff = get_object_or_404(Lessons, slug=slug)
         return staff
+
 
 
 class QuestionList(generics.ListCreateAPIView):
