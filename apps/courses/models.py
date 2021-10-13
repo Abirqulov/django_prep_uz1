@@ -36,8 +36,6 @@ class Course(models.Model):
     name_ru = models.CharField(max_length=120, null=True)
     price = models.CharField(max_length=120)
     about = models.TextField()
-    you_learn = models.CharField(max_length=255, null=True)
-    reader_obligation = models.CharField(max_length=255, null=True)
     description = models.TextField()
     slug = models.SlugField(max_length=120, unique=True, blank=True)
 
@@ -46,6 +44,25 @@ class Course(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class ReaderLearns(models.Model):
+    title = models.CharField(max_length=255)
+    course_reader = models.ForeignKey(Course, on_delete=models.DO_NOTHING, null=True, blank=True,
+                                      related_name='course_reader')
+    created_at = models.DateField(auto_now=True)
+
+    def __str__(self):
+        return self.title
+
+
+class RequirementsFromReader(models.Model):
+    title = models.CharField(max_length=255)
+    course_requirements = models.ForeignKey(Course, on_delete=models.DO_NOTHING, null=True, blank=True,
+                                            related_name='course_requirements')
+
+    def __str__(self):
+        return self.title
 
 
 class Lessons(models.Model):

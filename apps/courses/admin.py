@@ -17,4 +17,6 @@ admin.site.register(Lessons)
 admin.site.register(Comment)
 admin.site.register(Question, QuestionAdmin)
 admin.site.register(Answer)
-admin.site.register(Course)
+admin.site.register(Course),
+admin.site.register(ReaderLearns),
+admin.site.register(RequirementsFromReader),

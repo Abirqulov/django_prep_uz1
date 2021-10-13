@@ -35,14 +35,29 @@ class CourseTeacher(serializers.ModelSerializer):
         fields = ['id', 'name']
 
 
+class ReaderLearnsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ReaderLearns
+        fields = ['id', 'title', 'course_reader']
+
+
+class RequirementsFromReaderSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RequirementsFromReader
+        fields = ['id', 'title', 'course_requirements']
+
+
 class CourseSerializers(serializers.ModelSerializer):
     name = serializers.SerializerMethodField()
     lessons = LessonSerializers(many=True, read_only=True)
     teachers = CourseTeacher(many=False, read_only=True)
+    course_reader = ReaderLearnsSerializer(many=True, read_only=True)
+    course_requirements = RequirementsFromReaderSerializer(many=True, read_only=True)
 
     class Meta:
         model = Course
-        fields = ['id', 'name', 'image', 'teachers', 'category', 'price', 'description', 'slug', 'lessons']
+        fields = ['id', 'name', 'image', 'teachers', 'category', 'price', 'description', 'slug', 'lessons',
+                  'course_reader', 'course_requirements']
 
     def get_name(self, course):
         request = self.context.get('request')
