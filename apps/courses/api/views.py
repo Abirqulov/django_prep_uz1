@@ -101,7 +101,7 @@ class CourseSlugView(generics.RetrieveAPIView):
 
 class LessonsListApiView(generics.ListAPIView):
     serializer_class = LessonSerializers
-    queryset = Lessons.objects.all()
+    queryset = Lessons.objects.filter(slug__isnull=True)
 
 
 class LessonsSlugView(generics.RetrieveAPIView):
