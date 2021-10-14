@@ -65,7 +65,7 @@ class TeachersSlugView(generics.RetrieveAPIView):
 
 
 class CourseListView(generics.ListAPIView):
-    serializer_class = CourseCategorySerializers
+    serializer_class = CourseListSerializers
     queryset = Course.objects.all()
     filter_backends = (filters.SearchFilter, FullTextSearchFilterBackend)
     search_fields = ['name', 'description']
@@ -73,7 +73,7 @@ class CourseListView(generics.ListAPIView):
 
 
 class CourseAPIView(generics.RetrieveAPIView):
-    serializer_class = CourseSerializers
+    serializer_class = CourseIdSlugSerializers
     queryset = Course.objects.all()
     filter_backends = (DjangoFilterBackend, filters.OrderingFilter)
 
@@ -89,7 +89,7 @@ class CourseAPIView(generics.RetrieveAPIView):
 
 class CourseSlugView(generics.RetrieveAPIView):
     lookup_field = 'slug'
-    serializer_class = CourseSerializers
+    serializer_class = CourseIdSlugSerializers
     queryset = Course.objects.all()
     filter_backends = (DjangoFilterBackend, filters.OrderingFilter)
 
