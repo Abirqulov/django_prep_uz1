@@ -203,4 +203,13 @@ class QuestionSerializer(serializers.ModelSerializer):
         fields = ['id', 'text', 'answers']
 
 
+class LessonsChildSerializers(serializers.ModelSerializer):
+    comments = CommentSerializers(many=True, read_only=True)
+    questions = QuestionSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Lessons
+        fields = ['id', 'name', 'video', 'comments', 'questions', 'slug']
+
+
 

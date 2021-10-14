@@ -80,7 +80,7 @@ class Lessons(models.Model):
 
 class Comment(models.Model):
     author = models.ForeignKey(User, on_delete=models.DO_NOTHING)
-    post = models.ForeignKey(Lessons, on_delete=models.DO_NOTHING)
+    post = models.ForeignKey(Lessons, on_delete=models.DO_NOTHING,  null=True, blank=True, related_name='comments')
     text = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     reply = models.ForeignKey('self', on_delete=models.CASCADE, related_name="replies", null=True)
@@ -90,7 +90,7 @@ class Comment(models.Model):
 
 
 class Question(models.Model):
-    lesson = models.ForeignKey(Lessons, on_delete=models.DO_NOTHING)
+    lesson = models.ForeignKey(Lessons, on_delete=models.DO_NOTHING, null=True, blank=True, related_name='questions')
     text = models.CharField(max_length=120)
     add_time = models.DateTimeField(auto_now_add=True)
 

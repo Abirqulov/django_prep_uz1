@@ -109,6 +109,15 @@ class LessonsSlugView(generics.RetrieveAPIView):
         return staff
 
 
+class LessonChildListApiView(generics.ListAPIView):
+    serializer_class = LessonsChildSerializers
+    queryset = Lessons.objects.filter(parent__isnull=False)
+
+
+class LessonChildApiView(generics.RetrieveAPIView):
+    serializer_class = LessonsChildSerializers
+    queryset = Lessons.objects.filter(parent__isnull=False)
+
 
 class QuestionList(generics.ListCreateAPIView):
     serializer_class = QuestionSerializer

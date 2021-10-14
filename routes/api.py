@@ -18,6 +18,8 @@ urlpatterns = [
     path('course/<str:slug>', CourseSlugView.as_view()),
     path('courses/', CourseListView.as_view()),
     path('lesson/<str:slug>', LessonsSlugView.as_view()),
+    path('lesson-childs', LessonChildListApiView.as_view()),
+    path('lesson-child/<int:pk>', LessonChildApiView.as_view()),
 
     path('lesson_video/', videos_file, name='videos'),
     path('images/', image_file),
