@@ -38,13 +38,13 @@ class CourseTeacher(serializers.ModelSerializer):
 class ReaderLearnsSerializer(serializers.ModelSerializer):
     class Meta:
         model = ReaderLearns
-        fields = ['id', 'title', 'course_reader']
+        fields = ['id', 'title']
 
 
 class RequirementsFromReaderSerializer(serializers.ModelSerializer):
     class Meta:
         model = RequirementsFromReader
-        fields = ['id', 'title', 'course_requirements']
+        fields = ['id', 'title']
 
 
 class CourseSerializers(serializers.ModelSerializer):
