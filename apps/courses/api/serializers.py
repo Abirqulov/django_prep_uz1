@@ -56,7 +56,7 @@ class CourseSerializers(serializers.ModelSerializer):
 
     class Meta:
         model = Course
-        fields = ['id', 'name', 'image', 'teachers', 'category', 'price', 'description', 'slug', 'lessons',
+        fields = ['id', 'name', 'about', 'image', 'teachers', 'category', 'price', 'description', 'slug', 'lessons',
                   'course_reader', 'course_requirements']
 
     def get_name(self, course):
