@@ -17,6 +17,7 @@ urlpatterns = [
     path('course/<int:pk>', CourseAPIView.as_view()),
     path('course/<str:slug>', CourseSlugView.as_view()),
     path('courses/', CourseListView.as_view()),
+    path('lessons', LessonsListApiView.as_view()),
     path('lesson/<str:slug>', LessonsSlugView.as_view()),
     path('lesson-childs', LessonChildListApiView.as_view()),
     path('lesson-child/<int:pk>', LessonChildApiView.as_view()),

@@ -99,6 +99,11 @@ class CourseSlugView(generics.RetrieveAPIView):
         return staff
 
 
+class LessonsListApiView(generics.ListAPIView):
+    serializer_class = LessonSerializers
+    queryset = Lessons.objects.all()
+
+
 class LessonsSlugView(generics.RetrieveAPIView):
     serializer_class = LessonSerializers
     queryset = Lessons.objects.filter(slug__isnull=True)

@@ -8,7 +8,7 @@ class LessonSerializers(serializers.ModelSerializer):
 
     class Meta: 
         model = Lessons
-        fields = ['id', 'course', 'name', 'video', 'childs', 'slug']
+        fields = ['id', 'course', 'name', 'childs', 'slug']
 
     def get_childs(self, instance):
         childs = instance.childs.all().order_by('id')
