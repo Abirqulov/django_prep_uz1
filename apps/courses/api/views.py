@@ -3,6 +3,7 @@ from .serializers import *
 from .filters import *
 from rest_framework.generics import GenericAPIView, ListAPIView, ListCreateAPIView, CreateAPIView, RetrieveAPIView
 from rest_framework.response import Response
+from django.http import JsonResponse
 from rest_framework.decorators import api_view
 from rest_framework import generics, views, response, filters
 from django.shortcuts import render, get_object_or_404
@@ -192,6 +193,29 @@ def comment(request):
         'status': 1,
     }
     return Response(res)
+
+
+class StatisticApiView(views.APIView):
+
+    def post(self, request):
+        lesson = []
+        question = []
+        course = []
+        questions = Question.objects.filter().values('text')
+        lessons = Lessons.objects.filter().values('video')
+        courses = Course.objects.filter().values('name')
+        for l in lessons:
+            lesson += l
+        for q in questions:
+            question += q
+        for c in courses:
+            course += c
+        data = [{
+            'lesson': len(lesson),
+            'question': len(question),
+            'course': len(course),
+        }]
+        return JsonResponse(data)
 
 
 def videos_file(request):

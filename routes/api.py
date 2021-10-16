@@ -22,6 +22,8 @@ urlpatterns = [
     path('lesson-childs', LessonChildListApiView.as_view()),
     path('lesson-child/<int:pk>', LessonChildApiView.as_view()),
 
+    path('statistic', StatisticApiView.as_view()),
+
     path('lesson_video/', videos_file, name='videos'),
     path('images/', image_file),
 
