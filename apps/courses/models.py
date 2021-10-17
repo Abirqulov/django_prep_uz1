@@ -1,5 +1,5 @@
 from django.db import models
-from account.models import *
+# from accountUser.models import *
 # Create your models here.
 
 
@@ -79,7 +79,7 @@ class Lessons(models.Model):
 
 
 class Comment(models.Model):
-    author = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+    # author = models.ForeignKey(User, on_delete=models.DO_NOTHING)
     post = models.ForeignKey(Lessons, on_delete=models.DO_NOTHING,  null=True, blank=True, related_name='comments')
     text = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
