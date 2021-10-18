@@ -6,7 +6,7 @@ from apps.courses.api.views import *
 urlpatterns = [
     path('register/', RegisterApiView.as_view()),
     path('login/', LoginApiView.as_view()),
-    path('profile/', UserProfileApiView.as_view()),
+    # path('profile/', UserProfileApiView.as_view()),
     path('regions/', RegionListView.as_view()),
     path('region/<int:pk>', RegionRetrieveAPIView.as_view()),
 

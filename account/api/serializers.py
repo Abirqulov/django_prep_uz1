@@ -36,8 +36,8 @@ class RegionSerializer(serializers.ModelSerializer):
         return RegionSerializer(childs, many=True, context={'request': request}).data
 
 
-class UserProfileSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = User
-        fields = ['id', 'first_name', 'last_name', 'phone', 'email', 'gender', 'birth_date', 'user_about']
+# class UserProfileSerializer(serializers.ModelSerializer):
+#
+#     class Meta:
+#         model = User
+#         fields = ['id', 'first_name', 'last_name', 'phone', 'email', 'gender', 'birth_date', 'user_about']
