@@ -1,7 +1,11 @@
-from .serializers import *
-from ..models import *
+from rest_framework import status
+from rest_framework.permissions import AllowAny
+from rest_framework.response import Response
+from rest_framework.views import APIView
 from rest_framework.generics import GenericAPIView, ListAPIView, ListCreateAPIView
 from rest_framework import response, status
+from .serializers import *
+from .renderers import *
 from django.contrib.auth import authenticate
 
 
@@ -14,8 +18,8 @@ class RegisterApiView(GenericAPIView):
     serializer_class = RegisterSerializers
 
     def post(self, request):
-        user = request.data.get('user', {})
-        serializer = self.serializer_class(data=user)
+        # user = request.data.get('user', {})
+        serializer = self.serializer_class(data=request.data)
 
         if serializer.is_valid():
             serializer.save()
@@ -35,3 +39,4 @@ class LoginApiView(GenericAPIView):
             serializer = self.serializer_class(user)
             return response.Response(serializer.data, status=status.HTTP_200_OK)
         return response.Response({'messeges': 'Login yoki parol mos kelmadi!'}, status=status.HTTP_401_UNAUTHORIZED)
+
