@@ -23,4 +23,21 @@ class LoginSerializers(serializers.ModelSerializer):
         fields = ('username', 'password', 'token')
 
 
-# class UserProfile(serializers.ModelSerializer):
+class RegionSerializer(serializers.ModelSerializer):
+    childs = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Region
+        fields = ['id', 'region_name', 'childs']
+
+    def get_childs(self, instance):
+        childs = instance.childs.all().order_by('id')
+        request = self.context.get('request')
+        return RegionSerializer(childs, many=True, context={'request': request}).data
+
+
+class UserProfileSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = ['id', 'first_name', 'last_name', 'phone', 'email', 'gender', 'birth_date', 'user_about']

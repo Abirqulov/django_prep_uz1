@@ -7,11 +7,7 @@ from rest_framework import response, status
 from .serializers import *
 from .renderers import *
 from django.contrib.auth import authenticate
-
-
-class UsersView(GenericAPIView):
-    serializer_class = RegisterSerializers
-    queryset = User.objects.all()
+from rest_framework import generics
 
 
 class RegisterApiView(GenericAPIView):
@@ -39,4 +35,28 @@ class LoginApiView(GenericAPIView):
             serializer = self.serializer_class(user)
             return response.Response(serializer.data, status=status.HTTP_200_OK)
         return response.Response({'messeges': 'Login yoki parol mos kelmadi!'}, status=status.HTTP_401_UNAUTHORIZED)
+
+
+class RegionListView(generics.ListAPIView):
+    serializer_class = RegionSerializer
+    queryset = Region.objects.all()
+
+
+class RegionRetrieveAPIView(generics.RetrieveAPIView):
+    serializer_class = RegionSerializer
+    queryset = Region.objects.all()
+
+
+class UserProfileApiView(GenericAPIView):
+    serializer_class = UserProfileSerializer
+
+    def post(self, request):
+        # user = request.data.get('user', {})
+        serializer = self.serializer_class(data=request.data)
+
+        if serializer.is_valid():
+            serializer.save()
+            return response.Response(serializer.data, status=status.HTTP_201_CREATED)
+        return response.Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 

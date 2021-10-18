@@ -4,9 +4,11 @@ from apps.courses.api.views import *
 
 
 urlpatterns = [
-    path('users/', UsersView.as_view()),
     path('register/', RegisterApiView.as_view()),
     path('login/', LoginApiView.as_view()),
+    path('profile/', UserProfileApiView.as_view()),
+    path('regions/', RegionListView.as_view()),
+    path('region/<int:pk>', RegionRetrieveAPIView.as_view()),
 
     path('category/', CategoryListAPIView.as_view()),
     path('category/<int:pk>', CategoryDetailAPIView.as_view()),
