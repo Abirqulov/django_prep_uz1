@@ -1,14 +1,20 @@
-from account.api.views import *
+from register.views import *
 from django.urls import path
+from config import settings
+from django.conf.urls.static import static
 from apps.courses.api.views import *
-
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+)
 
 urlpatterns = [
-    path('register/', RegisterApiView.as_view()),
-    path('login/', LoginApiView.as_view()),
-    # path('profile/', UserProfileApiView.as_view()),
-    path('regions/', RegionListView.as_view()),
-    path('region/<int:pk>', RegionRetrieveAPIView.as_view()),
+    path('login/', TokenObtainPairView.as_view(), name='login_view'),
+    path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh_view'),
+    path('logout/', LogOutAPIView.as_view(), name='logout_view'),
+    path('register/', RegisterAPIView.as_view()),
+    path('profile/', UserProfileApiView.as_view()),
+    path('regions/', RegionApiView.as_view()),
 
     path('category/', CategoryListAPIView.as_view()),
     path('category/<int:pk>', CategoryDetailAPIView.as_view()),
@@ -37,3 +43,5 @@ urlpatterns = [
 
 
 ]
+urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

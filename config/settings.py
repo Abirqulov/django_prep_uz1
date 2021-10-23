@@ -33,13 +33,13 @@ CORS_ORIGIN_ALLOW_ALL = True
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-AUTH_USER_MODEL = "account.User"
+AUTH_USER_MODEL = "register.User"
 
 # Application definition
 
 
 APPS = [
-    'account',
+    'register',
     'apps.courses',
 ]
 
@@ -111,6 +111,9 @@ JWT_AUTH = {
 REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': [
         'django_filters.rest_framework.DjangoFilterBackend'
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+       'rest_framework.permissions.AllowAny',
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework_simplejwt.authentication.JWTAuthentication',
