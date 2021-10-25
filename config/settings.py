@@ -183,6 +183,4 @@ STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 # MEDIA FILES
 
 
-
-
 django_heroku.settings(locals())
