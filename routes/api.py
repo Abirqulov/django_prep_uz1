@@ -1,4 +1,4 @@
-# from register.views import *
+from register.views import *
 from django.urls import path
 from config import settings
 from django.conf.urls.static import static
@@ -9,12 +9,12 @@ from rest_framework_simplejwt.views import (
 )
 
 urlpatterns = [
-    # path('login/', TokenObtainPairView.as_view(), name='login_view'),
-    # path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh_view'),
-    # path('logout/', LogOutAPIView.as_view(), name='logout_view'),
-    # path('register/', RegisterAPIView.as_view()),
-    # path('profile/', UserProfileApiView.as_view()),
-    # path('regions/', RegionApiView.as_view()),
+    path('login/', TokenObtainPairView.as_view(), name='login_view'),
+    path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh_view'),
+    path('logout/', LogOutAPIView.as_view(), name='logout_view'),
+    path('register/', RegisterAPIView.as_view()),
+    path('profile/', UserProfileApiView.as_view()),
+    path('regions/', RegionApiView.as_view()),
 
     path('category/', CategoryListAPIView.as_view()),
     path('category/<int:pk>', CategoryDetailAPIView.as_view()),

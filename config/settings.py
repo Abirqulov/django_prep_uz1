@@ -33,14 +33,14 @@ CORS_ORIGIN_ALLOW_ALL = True
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# AUTH_USER_MODEL = "register.User"
+AUTH_USER_MODEL = "register.User"
 # AUTH_USER_MODEL = "account.User"
 
 # Application definition
 
 
 APPS = [
-    # 'register',
+    'register',
     # 'account',
     'apps.courses',
 ]
