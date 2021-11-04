@@ -1,5 +1,6 @@
 from ..models import *
-from rest_framework import serializers
+from rest_framework import serializers, response
+from django.http import JsonResponse
 
 
 class LessonSerializers(serializers.ModelSerializer):
@@ -8,7 +9,7 @@ class LessonSerializers(serializers.ModelSerializer):
 
     class Meta: 
         model = Lessons
-        fields = ['id', 'course', 'name', 'childs', 'slug']
+        fields = ['id', 'course', 'name', 'video', 'childs', 'slug']
 
     def get_childs(self, instance):
         childs = instance.childs.all().order_by('id')
@@ -73,6 +74,7 @@ class CourseListSerializers(serializers.ModelSerializer):
 
 class CourseIdSlugSerializers(serializers.ModelSerializer):
     name = serializers.SerializerMethodField()
+    statistic = serializers.SerializerMethodField()
     lessons = LessonSerializers(many=True, read_only=True)
     teachers = CourseTeacher(many=False, read_only=True)
     course_reader = ReaderLearnsSerializer(many=True, read_only=True)
@@ -81,7 +83,7 @@ class CourseIdSlugSerializers(serializers.ModelSerializer):
     class Meta:
         model = Course
         fields = ['id', 'name', 'about', 'image', 'teachers', 'category', 'price', 'description', 'slug', 'lessons',
-                  'course_reader', 'course_requirements']
+                  'course_reader', 'course_requirements', 'statistic']
 
     def get_name(self, course):
         request = self.context.get('request')
@@ -93,6 +95,15 @@ class CourseIdSlugSerializers(serializers.ModelSerializer):
             if course.name_ru:
                 return course.name_ru
         return course.name
+
+    def get_statistic(self, request):
+        lessons = Lessons.objects.filter(id=request.id).values('name').count()
+        video = Lessons.objects.filter(id=request.id).values('video')
+        question = Question.objects.filter(id=request.id).values
+        data = {
+            "darslar": lessons
+        }
+        return JsonResponse(data, safe=False)
 
 
 class CourseCategorySerializers(serializers.ModelSerializer):

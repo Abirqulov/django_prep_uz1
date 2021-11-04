@@ -78,15 +78,6 @@ class CourseAPIView(generics.RetrieveAPIView):
     queryset = Course.objects.all()
     filter_backends = (DjangoFilterBackend, filters.OrderingFilter)
 
-    def get_about_course(self, request):
-        videos = []
-        for i in Lessons.objects.filter(parent__isnull=True):
-            videos.append(i)
-        k = len(videos)
-        return response.Response({
-            'Darslar': k,
-        })
-
 
 class CourseSlugView(generics.RetrieveAPIView):
     lookup_field = 'slug'
@@ -98,6 +89,15 @@ class CourseSlugView(generics.RetrieveAPIView):
         slug = self.kwargs.get('slug')
         staff = get_object_or_404(Course, slug=slug)
         return staff
+
+    def get_stat(self, request):
+        lessons = Lessons.objects.filter(id=request.id).values('name').count()
+        video = Lessons.objects.filter(id=request.id).values('video')
+        question = Question.objects.filter(id=request.id).values
+        data = {
+            "darslar": lessons
+        }
+        return JsonResponse(data, safe=False)
 
 
 class LessonsListApiView(generics.ListAPIView):
@@ -197,25 +197,31 @@ def comment(request):
 
 class StatisticApiView(views.APIView):
 
-    def post(self, request):
-        lesson = []
+    def get(self, request):
+        video = []
         question = []
         course = []
+        user = []
+        users = User.objects.filter().values('username')
         questions = Question.objects.filter().values('text')
-        lessons = Lessons.objects.filter().values('video')
+        videos = Lessons.objects.filter().values('video')
         courses = Course.objects.filter().values('name')
-        for l in lessons:
-            lesson += l
+        print(courses)
+        for u in users:
+            user += u
+        for v in videos:
+            video += v
         for q in questions:
             question += q
         for c in courses:
             course += c
         data = [{
-            'lesson': len(lesson),
-            'question': len(question),
-            'course': len(course),
+            'users': len(user),
+            'videos': len(videos),
+            'questions': len(question),
+            'courses': len(course),
         }]
-        return JsonResponse(data)
+        return JsonResponse(data, safe=False)
 
 
 def videos_file(request):

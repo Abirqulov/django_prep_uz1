@@ -1,5 +1,4 @@
 from django.db import models
-# from register.models import *
 from register.models import *
 # Create your models here.
 
@@ -106,5 +105,7 @@ class Answer(models.Model):
 
     def __str__(self):
         return str(self.question)
+
+
 
 
