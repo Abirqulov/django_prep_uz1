@@ -3,11 +3,12 @@ from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, response, generics
-from .serializers import UserRegisterSerializer, UserProfileSerializers, RegionSerializer
+from .serializers import UserRegisterSerializer, UserProfileSerializers, RegionSerializer, RegionParentSerializers
 from rest_framework.generics import GenericAPIView, ListAPIView, ListCreateAPIView
 from rest_framework_simplejwt.tokens import RefreshToken
 # from .permissions import IsAuthorOrReadOnly
 from .models import User, Region
+from django.shortcuts import render, get_object_or_404
 from rest_framework.permissions import IsAuthenticated
 
 
@@ -46,6 +47,31 @@ class LogOutAPIView(APIView):
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
+class RegionApiView(generics.ListAPIView):
+    serializer_class = RegionSerializer
+    queryset = Region.objects.filter(parent__isnull=True)
+
+
+class RegionSlugApiView(generics.RetrieveAPIView):
+    serializer_class = RegionSerializer
+    queryset = Region.objects.filter(slug__isnull=False)
+
+    def get_object(self):
+        slug = self.kwargs.get('slug')
+        staff = get_object_or_404(Region, slug=slug)
+        return staff
+
+
+class RegionParentApiView(generics.ListAPIView):
+    serializer_class = RegionParentSerializers
+    queryset = Region.objects.filter(parent__isnull=True)
+
+
+class RegionCHildsApiView(generics.ListAPIView):
+    serializer_class = RegionParentSerializers
+    queryset = Region.objects.filter(parent__isnull=False)
+
+
 class UserProfileApiView(GenericAPIView):
     serializer_class = UserProfileSerializers
     permission_classes = [IsAuthenticated]
@@ -54,7 +80,7 @@ class UserProfileApiView(GenericAPIView):
     def post(self, request):
         user_id = self.request.user.id
         singleton_instance = User.objects.get(id=user_id)
-        print(request.user)
+
         serializer = self.serializer_class(instance=singleton_instance, data=request.data)
 
         if serializer.is_valid():
@@ -62,7 +88,3 @@ class UserProfileApiView(GenericAPIView):
             return response.Response(serializer.data, status=status.HTTP_201_CREATED)
         return response.Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
-class RegionApiView(generics.ListAPIView):
-    serializer_class = RegionSerializer
-    queryset = Region.objects.filter(parent__isnull=True)

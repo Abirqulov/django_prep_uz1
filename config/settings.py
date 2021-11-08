@@ -107,7 +107,11 @@ DATABASES = {
 
 JWT_AUTH = {
     'JWT_AUTH_HEADER_PREFIX': 'Bearer',
-    'JWT_EXPIRATION_DELTA': datetime.timedelta(days=366),
+    'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(days=364),
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(days=364),
+    'JWT_ALLOW_REFRESH': True,
+    'JWT_DECODE_HANDLER':
+        'rest_framework_jwt.utils.jwt_decode_handler',
 }
 
 REST_FRAMEWORK = {

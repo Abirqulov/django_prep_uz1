@@ -15,6 +15,9 @@ urlpatterns = [
     path('register/', RegisterAPIView.as_view()),
     path('profile/', UserProfileApiView.as_view()),
     path('regions/', RegionApiView.as_view()),
+    path('region-parents/', RegionParentApiView.as_view()),
+    path('region-childs/', RegionCHildsApiView.as_view()),
+    path('regions/<str:slug>', RegionSlugApiView.as_view()),
 
     path('category/', CategoryListAPIView.as_view()),
     path('category/<int:pk>', CategoryDetailAPIView.as_view()),

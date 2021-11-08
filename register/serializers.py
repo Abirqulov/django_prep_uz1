@@ -52,13 +52,19 @@ class RegionSerializer(serializers.ModelSerializer):
         return RegionSerializer(childs, many=True, context={'request': request}).data
 
 
+class RegionParentSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = Region
+        fields = ['id', 'name']
+
+
 class UserProfileSerializers(serializers.ModelSerializer):
-    # region = serializers.SerializerMethodField()
 
     class Meta:
         model = User
-        fields = ['id', 'first_name', 'last_name', 'phone', 'email', 'image', 'birth_date', 'gender', 'user_about']
-    #
-    # def get_region(self):
-    #     region = Region.objects.filter(parent__isnull=False)
-    #     return region
+        fields = ['id', 'first_name', 'last_name', 'phone', 'email', 'image', 'region',
+                  'birth_date', 'gender', 'user_about']
+
+        def to_representation(self, instance):
+            self.fields['region'] = RegionSerializer(read_only=True)
+            return super(UserProfileSerializers, self).to_representation(instance)
