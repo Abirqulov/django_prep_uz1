@@ -52,14 +52,14 @@ class RegionApiView(generics.ListAPIView):
     queryset = Region.objects.filter(parent__isnull=True)
 
 
-# class RegionSlugApiView(generics.RetrieveAPIView):
-#     serializer_class = RegionSerializer
-#     queryset = Region.objects.filter(slug__isnull=False)
-#
-#     def get_object(self):
-#         slug = self.kwargs.get('slug')
-#         staff = get_object_or_404(Region, slug=slug)
-#         return staff
+class RegionSlugApiView(generics.RetrieveAPIView):
+    serializer_class = RegionSerializer
+    queryset = Region.objects.filter(slug__isnull=False)
+
+    def get_object(self):
+        slug = self.kwargs.get('slug')
+        staff = get_object_or_404(Region, slug=slug)
+        return staff
 
 
 class RegionParentApiView(generics.ListAPIView):

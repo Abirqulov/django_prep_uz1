@@ -6,7 +6,7 @@ from config.constants import *
 class Region(models.Model):
     name = models.CharField(max_length=120)
     parent = models.ForeignKey('self', blank=True, null=True, related_name='childs', on_delete=models.DO_NOTHING)
-    # slug = models.SlugField(max_length=120, null=True, blank=True, unique=True)
+    slug = models.SlugField(max_length=120, null=True, blank=True, unique=True)
 
     def __str__(self):
         return self.name
