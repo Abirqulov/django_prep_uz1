@@ -44,7 +44,7 @@ class RegionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Region
-        fields = ['id', 'name', 'childs']
+        fields = ['id', 'name', 'childs', 'slug']
 
     def get_childs(self, instance):
         childs = instance.childs.all().order_by('id')
@@ -55,7 +55,7 @@ class RegionSerializer(serializers.ModelSerializer):
 class RegionParentSerializers(serializers.ModelSerializer):
     class Meta:
         model = Region
-        fields = ['id', 'name']
+        fields = ['id', 'name', 'slug']
 
 
 class UserProfileSerializers(serializers.ModelSerializer):
