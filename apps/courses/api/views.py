@@ -90,6 +90,15 @@ class CourseSlugView(generics.RetrieveAPIView):
         staff = get_object_or_404(Course, slug=slug)
         return staff
 
+    # def get_stat(self, request):
+    #     lessons = Lessons.objects.filter(id=request.id).values('name').count()
+    #     video = Lessons.objects.filter(id=request.id).values('video')
+    #     question = Question.objects.filter(id=request.id).values
+    #     data = {
+    #         "darslar": lessons
+    #     }
+    #     return JsonResponse(data, safe=False)
+
 
 class LessonsListApiView(generics.ListAPIView):
     serializer_class = LessonSerializers

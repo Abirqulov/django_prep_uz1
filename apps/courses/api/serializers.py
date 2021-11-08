@@ -74,7 +74,7 @@ class CourseListSerializers(serializers.ModelSerializer):
 
 class CourseIdSlugSerializers(serializers.ModelSerializer):
     name = serializers.SerializerMethodField()
-    statistic = serializers.SerializerMethodField()
+    # statistic = serializers.SerializerMethodField()
     lessons = LessonSerializers(many=True, read_only=True)
     teachers = CourseTeacher(many=False, read_only=True)
     course_reader = ReaderLearnsSerializer(many=True, read_only=True)
@@ -83,7 +83,7 @@ class CourseIdSlugSerializers(serializers.ModelSerializer):
     class Meta:
         model = Course
         fields = ['id', 'name', 'about', 'image', 'teachers', 'category', 'price', 'description', 'slug', 'lessons',
-                  'course_reader', 'course_requirements', 'statistic']
+                  'course_reader', 'course_requirements']
 
     def get_name(self, course):
         request = self.context.get('request')
@@ -96,14 +96,14 @@ class CourseIdSlugSerializers(serializers.ModelSerializer):
                 return course.name_ru
         return course.name
 
-    def get_statistic(self, request):
-        lessons = Lessons.objects.filter(id=request.id).values('name').count()
-        video = Lessons.objects.filter(id=request.id).values('video')
-        question = Question.objects.filter(id=request.id).values
-        data = {
-            "darslar": lessons
-        }
-        return JsonResponse(data, safe=False)
+    # def get_statistic(self, request):
+    #     lessons = Lessons.objects.filter(id=request.id).values('name').count()
+    #     video = Lessons.objects.filter(id=request.id).values('video')
+    #     question = Question.objects.filter(id=request.id).values
+    #     data = {
+    #         "darslar": lessons
+    #     }
+    #     return JsonResponse(data, safe=False)
 
 
 class CourseCategorySerializers(serializers.ModelSerializer):
