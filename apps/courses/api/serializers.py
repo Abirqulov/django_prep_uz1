@@ -33,7 +33,7 @@ class LessonSerializers(serializers.ModelSerializer):
 class CourseTeacher(serializers.ModelSerializer):
     class Meta:
         model = Teachers
-        fields = ['id', 'name']
+        fields = ['id', 'name', 'images']
 
 
 class ReaderLearnsSerializer(serializers.ModelSerializer):

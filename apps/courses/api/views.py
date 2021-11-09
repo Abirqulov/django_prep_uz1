@@ -100,6 +100,28 @@ class CourseSlugView(generics.RetrieveAPIView):
     #     return JsonResponse(data, safe=False)
 
 
+# class CourseStatistic(views.APIView):
+#
+#     def get(self, request, *args, **kwargs):
+#         video = []
+#         question = []
+#         id = request.query_params["id"]
+#         course = Course.objects.get(id=id)
+#         price = Course.objects.get('price')
+#         questions = Question.objects.filter(id=course).values('text')
+#         videos = Lessons.objects.filter(id=course).values('video')
+#         for v in videos:
+#             video += v
+#         for q in questions:
+#             question += q
+#         data = [{
+#             'videos': len(videos),
+#             'questions': len(question),
+#             'price': price,
+#         }]
+#         return JsonResponse(data, safe=False)
+
+
 class LessonsListApiView(generics.ListAPIView):
     serializer_class = LessonSerializers
     queryset = Lessons.objects.filter(slug__isnull=True)
