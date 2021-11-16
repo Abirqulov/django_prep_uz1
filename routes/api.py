@@ -35,6 +35,11 @@ urlpatterns = [
     path('lesson-childs', LessonChildListApiView.as_view()),
     path('lesson-child/<int:pk>', LessonChildApiView.as_view()),
 
+    path('teacher-sum/', TeachersSumAPIView.as_view()),
+    path('teacher-statistic/', TeacherStatisticApiView.as_view()),
+
+    path('user-count/', UserCount.as_view()),
+
     path('statistic', StatisticApiView.as_view()),
     # path('statistic-course', CourseStatistic.as_view()),
 

@@ -9,6 +9,12 @@ from rest_framework import generics, views, response, filters
 from django.shortcuts import render, get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.pagination import PageNumberPagination
+from django.db.models import Count
+from django.db.models.functions import TruncMonth
+from register.models import User
+import json
+import datetime
+from django.utils import timezone
 
 
 class CategoryListAPIView(generics.ListAPIView):
@@ -255,4 +261,58 @@ def image_file(request):
     images = Teachers.objects.all()
     category_image = Category.objects.all()
     return render(request, 'video.html', {'images': images, 'category_image': category_image})
+
+
+class TeachersSumAPIView(generics.RetrieveAPIView):
+
+    def get(self, request):
+        totalsumma = []
+        course = []
+        # teacher = Teachers.objects.get(id=3)
+        # print(teacher)
+        courses = Course.objects.filter().values('name')
+        print(courses)
+
+        for c in courses:
+            course += c
+        data = [{
+            'courses': len(course),
+        }]
+        return JsonResponse(data, safe=False)
+
+
+class TeacherStatisticApiView(views.APIView):
+
+    def get(self, request, *args, **kwargs):
+        teachers = Teachers.objects.all()
+        data = []
+        for item in teachers:
+            count_course = item.course.all().count()
+            all_course = item.course.all()
+            total_price = 0
+            for c in all_course:
+                pr = c.price
+                if pr == 'Bepul':
+                    continue
+                total_price += int(pr)
+            data.append({
+                'teacher': item.name,
+                'count_course': count_course,
+                'total_price': total_price,
+        })
+        return JsonResponse(data, safe=False)
+
+
+class UserCount(views.APIView):
+
+    def get(self, request):
+        month = float(request.data.get('month'))
+        print(request.data.get('month'))
+        users = User.objects.filter(date_joined__month=month).count()
+        print(users)
+        data = [{
+            'users': users
+        }]
+
+        return JsonResponse(data, safe=False)
 

@@ -223,4 +223,40 @@ class LessonsChildSerializers(serializers.ModelSerializer):
         fields = ['id', 'name', 'video', 'comments', 'questions', 'slug']
 
 
+class CourseStatisticSerializers(serializers.ModelSerializer):
+    name = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Course
+        fields = ['id', 'name', 'price']
+
+    def get_name(self, course):
+        request = self.context.get('request')
+        lan = request.GET.get('lan', 'uz')
+        if lan == 'uz':
+            if course.name:
+                return course.name
+        elif lan == 'ru':
+            if course.name_ru:
+                return course.name_ru
+        return course.name
+
+
+class TeacherStatistic(serializers.ModelSerializer):
+    course = CourseStatisticSerializers(many=True, read_only=True)
+    course_count = serializers.SerializerMethodField(read_only=True)
+
+    class Meta:
+        model = Teachers
+        fields = ['id', 'name', 'slug', 'course', 'course_count']
+
+    # def get_course_count(self, request):
+    #     cour = []
+    #     courses = Course.objects.filter().values('name')
+    #     for c in courses:
+    #         cour += c
+    #     data = [{
+    #         'courses': len(cour),
+    #     }]
+    #     return JsonResponse(data, content_type="application/json", safe=False)
 
