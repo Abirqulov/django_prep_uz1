@@ -1,6 +1,7 @@
 from ..models import *
 from .serializers import *
 from .filters import *
+from register.serializers import *
 from rest_framework.generics import GenericAPIView, ListAPIView, ListCreateAPIView, CreateAPIView, RetrieveAPIView
 from rest_framework.response import Response
 from django.http import JsonResponse
@@ -12,6 +13,7 @@ from rest_framework.pagination import PageNumberPagination
 from django.db.models import Count
 from django.db.models.functions import TruncMonth
 from register.models import User
+from datetime import datetime
 import json
 import datetime
 from django.utils import timezone
@@ -95,37 +97,6 @@ class CourseSlugView(generics.RetrieveAPIView):
         slug = self.kwargs.get('slug')
         staff = get_object_or_404(Course, slug=slug)
         return staff
-
-    # def get_stat(self, request):
-    #     lessons = Lessons.objects.filter(id=request.id).values('name').count()
-    #     video = Lessons.objects.filter(id=request.id).values('video')
-    #     question = Question.objects.filter(id=request.id).values
-    #     data = {
-    #         "darslar": lessons
-    #     }
-    #     return JsonResponse(data, safe=False)
-
-
-# class CourseStatistic(views.APIView):
-#
-#     def get(self, request, *args, **kwargs):
-#         video = []
-#         question = []
-#         id = request.query_params["id"]
-#         course = Course.objects.get(id=id)
-#         price = Course.objects.get('price')
-#         questions = Question.objects.filter(id=course).values('text')
-#         videos = Lessons.objects.filter(id=course).values('video')
-#         for v in videos:
-#             video += v
-#         for q in questions:
-#             question += q
-#         data = [{
-#             'videos': len(videos),
-#             'questions': len(question),
-#             'price': price,
-#         }]
-#         return JsonResponse(data, safe=False)
 
 
 class LessonsListApiView(generics.ListAPIView):
@@ -226,28 +197,22 @@ def comment(request):
 class StatisticApiView(views.APIView):
 
     def get(self, request):
-        video = []
-        question = []
-        course = []
-        user = []
-        users = User.objects.filter().values('username')
-        questions = Question.objects.filter().values('text')
-        videos = Lessons.objects.filter().values('video')
-        courses = Course.objects.filter().values('name')
-        print(courses)
-        for u in users:
-            user += u
-        for v in videos:
-            video += v
-        for q in questions:
-            question += q
-        for c in courses:
-            course += c
+
+        users = User.objects.all()
+        questions = Question.objects.all()
+        videos = Lessons.objects.all()
+        courses = Course.objects.all()
+
+        users_count = users.count()
+        questions_count = questions.count()
+        videos_count = videos.count()
+        courses_count = courses.count()
+
         data = [{
-            'users': len(user),
-            'videos': len(videos),
-            'questions': len(question),
-            'courses': len(course),
+            'users': users_count,
+            'videos': videos_count,
+            'questions': questions_count,
+            'courses': courses_count,
         }]
         return JsonResponse(data, safe=False)
 
@@ -284,35 +249,102 @@ class TeachersSumAPIView(generics.RetrieveAPIView):
 class TeacherStatisticApiView(views.APIView):
 
     def get(self, request, *args, **kwargs):
-        teachers = Teachers.objects.all()
-        data = []
-        for item in teachers:
-            count_course = item.course.all().count()
-            all_course = item.course.all()
-            total_price = 0
-            for c in all_course:
-                pr = c.price
-                if pr == 'Bepul':
-                    continue
-                total_price += int(pr)
-            data.append({
-                'teacher': item.name,
-                'count_course': count_course,
-                'total_price': total_price,
-        })
+        try:
+            teachers = Teachers.objects.all()
+            data = []
+            for item in teachers:
+                count_course = item.course.all().count()
+                all_course = item.course.all()
+                total_price = 0
+                for c in all_course:
+                    pr = c.price
+                    if pr == 'Bepul':
+                        continue
+                    total_price += int(pr)
+                data.append({
+                    'teacher': item.name,
+                    'count_course': count_course,
+                    'total_price': total_price,
+            })
+        except:
+            pass
         return JsonResponse(data, safe=False)
 
 
-class UserCount(views.APIView):
+# class UserCount(views.APIView):
+#     serializer_class = UserCountSerializer
+#
+#     def get(self, request):
+#
+#         # month = float(request.data.get('month'))
+#         # print(request.data.get('month'))
+#         # users = User.objects.filter(date_joined__month=month).count()
+#         # print(users)
+#         # data = [{
+#         #     'users': users
+#         # }]
+#         #
+#         # return JsonResponse(data, safe=False)
+#
 
-    def get(self, request):
-        month = float(request.data.get('month'))
-        print(request.data.get('month'))
-        users = User.objects.filter(date_joined__month=month).count()
-        print(users)
-        data = [{
-            'users': users
-        }]
 
-        return JsonResponse(data, safe=False)
+@api_view(['GET'])
+def UserCount(request):
+
+    from django.db import connection
+
+    order_by = request.GET.get('order_by', None)
+    start_mode = request.GET.get('start_mode', None)
+    end_mode = request.GET.get('end_mode', None)
+    if order_by == 'time':
+        order_by = 'years, mothd'
+    elif order_by == '-time':
+        order_by = 'years desc, mothd desc'
+    else:
+        order_by = ''
+    sql1 = ''
+    print(start_mode)
+    int_start_mode = int(start_mode)
+    if start_mode:
+        start_year = datetime.datetime.fromtimestamp(int_start_mode).year
+        print(start_year)
+        start_month = datetime.datetime.fromtimestamp(int_start_mode).month
+        print(start_month)
+        sql1 = f'EXTRACT(YEAR FROM ru.date_joined) <= {start_year} or EXTRACT(MONTH FROM ru.date_joined) <= {start_month}'
+    # sql2 = f'EXTRACT(YEAR FROM ru.date_joined) < {datetime.datetime.now().year} and ' \
+    #        f'EXTRACT(MONTH FROM ru.date_joined) < {datetime.datetime.now().month}'
+    # if end_mode:
+    #     end_year = datetime.datetime.fromtimestamp(end_mode).year
+    #     end_month = datetime.datetime.fromtimestamp(end_mode).month
+    #     sql2 = f'EXTRACT(YEAR FROM ru.date_joined) < {end_year} and EXTRACT(MONTH FROM ru.date_joined) < {end_month}'
+
+    sql = f"""select EXTRACT(MONTH FROM ru.date_joined) mothd, EXTRACT(YEAR FROM ru.date_joined) as years, count(*) from register_user ru
+                where {sql1}
+                group by years,  mothd order by {order_by};"""
+
+    cursor = connection.cursor()
+    try:
+        result = []
+        cursor.execute(sql, ['default'])
+        rows = cursor.fetchall()
+        if len(rows) > 0:
+            for row in rows:
+                print(row)
+                result.append(
+                    {
+                        'month': row[0],
+                        'year': row[1],
+                        'count': row[2],
+                    }
+                )
+        res = {
+            'status': 1,
+            'result': result,
+        }
+        return Response(res)
+
+    except Exception as e:
+        cursor.close
+
+
 

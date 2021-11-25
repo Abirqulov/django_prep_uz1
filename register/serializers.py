@@ -39,6 +39,20 @@ class UserRegisterSerializer(serializers.ModelSerializer):
             })
 
 
+class UserCountSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = [
+            # 'id',
+            # 'username',
+            # 'email'
+            'date_joined',
+            # 'month',
+            # 'year',
+            'count'
+        ]
+
+
 class RegionSerializer(serializers.ModelSerializer):
     childs = serializers.SerializerMethodField(read_only=True)
 

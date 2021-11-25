@@ -38,7 +38,7 @@ urlpatterns = [
     path('teacher-sum/', TeachersSumAPIView.as_view()),
     path('teacher-statistic/', TeacherStatisticApiView.as_view()),
 
-    path('user-count/', UserCount.as_view()),
+    path('user-count/', UserCount),
 
     path('statistic', StatisticApiView.as_view()),
     # path('statistic-course', CourseStatistic.as_view()),
